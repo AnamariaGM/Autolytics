@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS mot_payments;
+DROP TABLE IF EXISTS mot_payments CASCADE;
 
 CREATE TABLE IF NOT EXISTS mot_payments (
     id SERIAL PRIMARY KEY,

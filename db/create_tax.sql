@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS tax_payments;
+DROP TABLE IF EXISTS tax_payments CASCADE;
 
 CREATE TABLE IF NOT EXISTS tax_payments (
     id SERIAL PRIMARY KEY,

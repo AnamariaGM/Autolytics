@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 // Import of the pool object from the 'pg' library for managing Postgress connections.
 const { Pool } = require("pg");
 
@@ -8,6 +10,7 @@ if (!process.env.PGDATABASE) {
 
 // Create a new instance of the Pool object for handling PostgreSQL connection pools.
 const pool = new Pool();
+
 
 // Export the pool object to make it available for use in other modules.
 module.exports = pool;
