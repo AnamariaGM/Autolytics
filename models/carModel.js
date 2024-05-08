@@ -19,6 +19,12 @@ class CarModel {
     deleteCar(id) {
       // Implementation for deleting a car record from the database
     }
+
+    async createCar(registrationNumber, make, model, year, fuelType, colour, engineCapacity, username){
+      try{
+        const query = 'INSERT INTO cars'()
+      }
+    }
   }
   
   module.exports = CarModel;
