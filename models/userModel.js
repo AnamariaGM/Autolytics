@@ -7,8 +7,10 @@ class UserModel {
 
   // Methods for CRUD operations related to user records
 
-  async getUser(id) {
-    // Implementation for retrieving a user record from the database
+  async getUserById(userId) {
+    const query = 'SELECT * FROM users WHERE id = $1';
+    const result = await this.database.query(query, [userId]);
+    return result.rows[0];
   }
 
   async updateUser(id, newData) {
@@ -45,8 +47,18 @@ class UserModel {
     }
   }
 
+  async getUserByEmail(email) {
+    try {
+      const query = 'SELECT * FROM users WHERE email = $1';
+      const user = await this.database.query(query, [email]);
+      return user.rows[0];
+    } catch (error) {
+      throw new Error('Error retrieving user');
+    }
+  }
+
   async addCarToUser(userId, carDetails) {
-    console.log("##### in the addcaruser model");
+    console.log('#### usermodel',carDetails)
     try {
       const {
         registration_number,

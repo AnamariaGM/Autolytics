@@ -3,7 +3,6 @@ const { fetchCarDetailsFromDVLA } = require("../services/dvlaService");
 
 class UserController {
   constructor(userModel) {
-
     // Check if an instance of UserModel already exists
     if (UserController.instance) {
       return UserController.instance;
@@ -16,12 +15,25 @@ class UserController {
     return this;
   }
 
-  async createUser(req, res) {
-    // Implementation for creating a new user
-  }
-
   async getUser(req, res) {
-    // Implementation for retrieving a user
+    try {
+      const userId = req.session.userId; // Retrieve user ID from session
+
+      if (!userId) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+
+      const user = await this.userModel.getUserById(userId);
+
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      res.status(200).json({ user });
+    } catch (error) {
+      console.error("Error retrieving user:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
   }
 
   async updateUser(req, res) {
@@ -64,10 +76,28 @@ class UserController {
     }
   }
 
+  async logout(req,res){
+    req.session.destroy(err=>{
+      if(err){
+        return res.status(500).json({message: 'Failed to log out'})
+      }
+      res.clearCookie('connect.sid')
+      return res.status(200).json({message:'Logged out successfully'})
+    })
+  }
+
+
   async login(req, res) {
+    console.log(req.body);
     try {
       const { username, password } = req.body;
-      const user = await this.userModel.getUserByUsername(username);
+      console.log(username, password);
+      let user;
+      if (username.includes("@")) {
+        user = await this.userModel.getUserByEmail(username);
+      } else {
+        user = await this.userModel.getUserByUsername(username);
+      }
 
       if (!user || user.password !== password) {
         return res
@@ -94,7 +124,8 @@ class UserController {
 
       const userId = req.session.userId; // Retrieve user ID from the session
 
-      const carDetails = req.body; 
+      const carDetails = req.body;
+      console.log(carDetails)
       const newCar = await this.userModel.addCarToUser(userId, carDetails);
       res
         .status(201)
@@ -121,12 +152,10 @@ class UserController {
         registrationNumber
       );
       if (existingCar) {
-        return res
-          .status(400)
-          .json({
-            message:
-              "Car with the same registration number already exists for the user",
-          });
+        return res.status(400).json({
+          message:
+            "Car with the same registration number already exists for the user",
+        });
       }
 
       const carDetails = await this.dvlaService.fetchCarDetailsFromDVLA(

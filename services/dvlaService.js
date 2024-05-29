@@ -15,7 +15,9 @@ async function fetchCarDetailsFromDVLA(registrationNumber){
       )
   
       const responseData = response.data
-      const carDetails={registration_number:responseData.registrationNumber, make:responseData.make,year:responseData.yearOfManufacture, fuel_type:responseData.fuelType, colour:responseData.colour, engine_capacity:responseData.engineCapacity
+      const carDetails={registration_number:responseData.registrationNumber, make:responseData.make,year:responseData.yearOfManufacture, fuel_type:responseData.fuelType, colour:responseData.colour, engine_capacity:responseData.engineCapacity, mot_status:responseData.motStatus,
+      tax_status:responseData.taxStatus,
+      tax_due_date:responseData.taxDueDate
       }
       console.log(carDetails)
       return carDetails
